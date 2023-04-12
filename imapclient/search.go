@@ -182,10 +182,8 @@ func writeSearchKey(enc *imapwire.Encoder, criteria *imap.SearchCriteria) {
 		encodeItem("SMALLER").SP().Number64(criteria.Smaller)
 	}
 
-	// Access to the Gmail thread ID: X-GM-THRID
-	// https://developers.google.com/gmail/imap/imap-extensions?hl=en#access_to_the_thread_id_x-gm-thrid
-	if criteria.ThreadId > 0 {
-		encodeItem("X-GM-THRID").SP().Number64(criteria.ThreadId)
+	if criteria.ThreadId > 0 && enc.ImapThreadIdTag != "" {
+		encodeItem(enc.ImapThreadIdTag).SP().Number64(criteria.ThreadId)
 	}
 
 	for _, not := range criteria.Not {
